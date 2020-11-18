@@ -1,0 +1,208 @@
+\chapter{Thực nghiệm}
+\label{Chapter4}
+%-----------------------Mô tả dataset, môi trường thực nghiệm---------------------%
+
+\section{Các bộ dữ liệu liên quan}
+\subsection{Nguồn gốc bộ dữ liệu}
+\hspace{10mm}{
+Một bộ dữ liệu quy mô lớn sử dụng 170 video mưa thực tế, trong đó 84 video được quay bằng iPhone X hoặc iPhone 6SP và 86 video được thu thập từ StoryBlocks hoặc YouTube. Các video này bao gồm:
+}
+\begin{itemize}
+    \item Cảnh đô thị phổ biến (ví dụ: các tòa nhà, đại lộ,...) 
+    \item Cảnh ngoại ô (ví dụ: đường phố, công viên,...)
+    \item Một số cảnh ngoài trời (ví dụ: rừng,...)
+\end{itemize}
+\hspace{10mm}{
+Khi chụp cảnh mưa, áp dụng cơ chế kiểm soát thời lượng phơi sáng cũng như thông số ISO để bao phủ các vệt mưa và điều kiện chiếu sáng khác nhau. Sử dụng phương pháp đã nói ở trên, tạo ra 29,500 cặp ảnh (mưa/ không mưa) chất lượng cao, được chia thành 28,500 ảnh để đào tạo và 1,000 ảnh để thử nghiệm. Việc áp dụng các phương pháp mới cho tới thời điểm hiện tại trong bài toán xóa mưa trên ảnh cho thấy, bộ dữ liệu này giúp cải thiện hiệu suất rất đáng kể cho từng phương pháp tương ứng.
+}
+
+\hspace{5mm}{
+Bộ dữ liệu tổ chức lưu trữ theo kiểu một tập hợp các cặp ảnh (mưa/ không mưa) trong đó ảnh mưa đóng vai trò là đầu vào và ảnh không mưa đóng vai trò là tiêu chuẩn đánh giá cho các độ đo chất lượng ảnh trong bài toán xoá mưa trên hình ảnh đơn.
+}
+\subsection{Mô tả chi tiết}
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Images/Chapter-3/img-Ch3-train-data.png}
+    \caption{Ảnh mưa từ tập dữ liệu train}
+    \label{fig:rain-gt-test-1}
+\end{figure}
+\subsubsection{Tập dữ liệu train}
+\begin{itemize}
+    \item Dữ liệu test bao gồm 28500 cặp ảnh (mưa/ không mưa), được phân ra 12 thư mục nén đánh chỉ số (0-11), mỗi thư mục bao gồm ảnh mưa được lưu trong thư mục "rain" và ảnh không mưa được lưu trong thư mục "gt".
+    \item Dung lượng: 44 GB.
+    \item Các thông tin về các cặp ảnh được lưu trong: real\_world.txt
+    \item File ảnh được lưu trữ theo định dạng:  ./real\_world/000/000-f/000-f\_x\_y.png, trong đó  f là chỉ số frame được trích xuất từ video,  x và y là vùng ảnh trong frame f.
+\end{itemize}
+\subsubsection{Tập dữ liệu main-test}
+\begin{itemize}
+    \item Dữ liệu test bao gồm 1000 cặp ảnh (mưa/ không mưa), trong đó ảnh mưa được lưu trong thư mục "rain" và ảnh không mưa được lưu trong thư mục "gt".
+    \item Dung lượng: 455MB.
+    \item Các thông tin về các cặp ảnh được lưu trong: real\_test\_1000.txt
+    \item Các ảnh trong thuộc cùng một cặp (mưa/ không mưa) thì được đánh cùng một chỉ số. Ví dụ (000.png/000gt.png, ...).
+\end{itemize}
+
+\begin{figure}[ht!]
+    \includegraphics[width=\textwidth]{Images/Chapter-3/img-Ch3-mua-gt-362.png}
+    \caption{(a) Ảnh không mưa, (b) Ảnh có mưa}
+    \label{fig:rain-gt-test-2}
+\end{figure}
+
+\begin{figure}[ht!]
+    \includegraphics[width=\textwidth]{Images/Chapter-3/img-Ch3-internet-mua.png}
+    \caption{Ảnh lấy ngẫu nhiên từ internet}
+    \label{fig:rain-internet}
+\end{figure}
+
+\subsubsection{Tập dữ liệu internal-test}
+\begin{itemize}
+    \item Tập hợp 168 ảnh được lấy ngẫu nhiên trên internet. Đây là tập dữ liệu đánh giá hiệu suất của phương pháp đối với dữ liệu ảnh không nằm trong bộ dữ liệu chính.
+    \item Dung lượng: 41 MB.
+    \item Các thông tin về các cặp ảnh được lưu trong: Real\_Internet.txt
+\end{itemize}
+
+\section{Image quality metrics}
+\hspace{10mm}{
+Bất kỳ xử lý nào được áp dụng trên ảnh cũng có thể gây ra sự mất mát thông tin hoặc làm giảm chất lượng ảnh. Phương pháp đánh giá chất lượng hình ảnh có thể được chia thành phương pháp khách quan và chủ quan. Phương pháp chủ quan dựa trên đánh giá của con người mà không cần tham khảo các tiêu chí rõ ràng. Các phương pháp khách quan dựa trên các tiêu chí số rõ ràng, được thể hiện dưới dạng các tham số và kiểm tra thống kê.
+}
+\subsection{The mean-square error (MSE)}
+\hspace{10mm}{MSE đại diện cho lỗi bình phương tích lũy giữa ảnh nén và ảnh gốc, trong khi PSNR đại diện cho thước đo của lỗi cực đại. Giá trị của MSE càng thấp, lỗi càng thấp.}
+\begin{equation}
+    \operatorname{MSE}(f, g)=\frac{1}{M N} \sum_{i=1}^{M} \sum_{j=1}^{N}\left(f_{i j}-g_{i j}\right)^{2}
+\end{equation}
+\begin{itemize}
+    \item f : Hình ảnh gốc hoặc hình ảnh tham chiếu
+    \item g : Hình ảnh xử lý thử nghiệm
+    \item MxN : là kích thước khung ảnh f, g
+\end{itemize}
+
+\subsection{Peak signal-to-noise ratio (PSNR)}
+\hspace{10mm}{Tỷ lệ nhiễu tín hiệu cực đại (PSNR) là thước đo chất lượng ảnh (giữa ảnh tham chiếu và ảnh xử lý) dựa trên sự khác biệt pixel, tính bằng decibel. PSNR càng cao, chứng tỏ chất lượng của hình ảnh được nén hoặc tái tạo càng tốt.}
+\begin{equation}
+    PSNR=10 \log _{10}\left(\frac{R^{2}}{MSE}\right)
+\end{equation}
+Trong đó:
+\begin{itemize}
+    \item MSE : The mean-square error
+    \item R : Nếu hình ảnh đầu vào có kiểu dữ liệu dấu phẩy động có độ chính xác kép, thì R là 1. Nếu nó có kiểu dữ liệu số nguyên không dấu 8 bit, R là 255,...
+\end{itemize}
+
+\subsection{Structural similarity index measure (SSIM)}
+\hspace{10mm}{
+SSIM là một thước đo chất lượng chuẩn mực được sử dụng để đo lường sự tương đồng giữa hai hình ảnh. Nó được phát triển bởi Wang et al. [No.], được xem là mô phỏng tương quan với nhận thức về chất lượng của hệ thống thị giác của con người (HVS). Khác với việc sử dụng các phương pháp tổng hợp lỗi cổ điển, SSIM được thiết kế để mô hình hóa bất kỳ biến dạng hình ảnh nào dưới dạng kết hợp của ba yếu tố là mất tương quan, méo độ chói và méo tương phản. SSIM được định nghĩa là:
+}
+\begin{equation}
+\operatorname{SSIM}(f, g)=l(f, g) c(f, g) s(f, g)
+\left\{\begin{aligned} l(f, g) &=\frac{2 \mu_{f} \mu_{g}+C_{1}}{\mu_{f}^{2}+\mu_{g}^{2}+C_{1}} \\ c(f, g) &=\frac{2 \sigma_{f} \sigma_{g}+C_{2}}{\sigma_{f}^{2}+\sigma_{g}^{2}+C_{2}} \\ s(f, g) &=\frac{\sigma_{f g}+C_{3}}{\sigma_{f} \sigma_{g}+C_{3}} \end{aligned}\right.
+\end{equation}
+Trong đó:
+\begin{itemize}
+    \item l : Hàm so sánh độ chói của hai hình ảnh
+    \item c : Hàm so sánh độ tương phản của hai hình ảnh
+    \item s : Hàm so sánh độ tương đồng về cấu trúc của hai hình ảnh
+\end{itemize}
+
+\section{Môi trường thử nghiệm}
+\subsection{Yêu cầu các gói cài đặt}
+\begin{itemize}
+    \item Python - 3.6.0 
+    \item PyTorch - 0.4.1 (1.0.x may not work for training)
+    \item Cupy (For CUDA 10.0) 
+    \item opencv -  4.1.2
+    \item TensorboardX - 1.9
+    \item progressbar2 - 3.47.0
+    \item scikit-image - 0.16.2
+    \item ffmpeg - 4.2
+    \item ffmpeg-python - 0.2.0
+\end{itemize}
+\subsection{Cài đặt môi trường trên Ubuntu 18.04.3 LTS}
+\lstset{frame=single, language=Python, tabsize=5}
+\hspace{10mm}{Thiết lập môi trường ảo dựa trên nền tảng anconda để tiến hành thực nghiệm, đều này là cần thiết cho việc loại bỏ các xung đột phiên bản giữa các gói cài đặt trong môi trường chính (base - environment). Dưới đây là cách thực thi vấn đề nêu trên bằng lệnh commands khi sử dụng  terminal hoặc Anaconda Prompt. Đối với thực nghiệm này chúng ta sử dụng phiên bản python - 3.6.0.}
+
+\hspace{5mm}{
+\begin{lstlisting}
+conda create -n myenv python=3.6
+\end{lstlisting}
+}
+
+\hspace{5mm}{Khi đã có một môi trường ảo Anaconda được khởi tạo hoàn hảo, việc tiếp theo chúng ta cần làm là lần lượt cài đặt các gói thư viện, plugin với phiên bản tương ướng đã nêu ở mục 3.3.1. Dưới đây là cách thực thi các lệnh commands trên  terminal hoặc Anaconda Prompt phục vụ cho việc cài đặt. Lưu ý, từng câu lệnh được hiển thị bên dưới phải được thực thi một cách độc lập,  chúng ta phải chắc chắn rằng trình cài đặt Anaconda xác nhận thông báo các thư viện, plugin đã được thiết lập trong môi trường thành công.}
+
+\begin{lstlisting}
+conda install pytorch=0.4.1 cuda92 -c pytorch
+conda install -c conda-forge ffmpeg
+conda install -c conda-forge opencv
+conda install -c pytorch torchvision
+pip install cupy-cuda100
+pip install tensorboardX
+pip install progressbar2
+pip install scikit-image
+pip install ffmpeg-python
+\end{lstlisting}
+
+\subsection{Sử dụng mã nguồn}
+\hspace{10mm}{
+Chúng tôi sử dụng mã nguồn tin cậy từ tác giả công bố bài báo ở hội nghị CVPR - 2019,  bộ mã nguồn này bao gồm đầy đủ các tài nguyên cần thiết cho toàn bộ quá trình từ việc huấn luyện model cho đến thử nghiệm đánh giá kết quả. Trong đó quan trọng nhất là file main.py, đây được xem như mạch điều khiển chính của toàn bộ mã nguồn.
+}
+
+\hspace{5mm}{
+    \begin{lstlisting}
+    Link github: https://github.com/stevewongv/SPANet
+    \end{lstlisting}
+}
+
+
+
+\section{Thực thi}
+\subsection{Thực nghiệm trên model đã được huấn luyện}
+\begin{itemize}
+    \item  Tải về và giải nén bộ dữ liệu test với dung lượng khoảng 455MB.
+    \item  Lưu ý đường dẫn thư mục lưu dữ liệu test, tùy chỉnh đường dẫn dataset cho phù hợp trong file main.py để đảm bảo chương trình có thể thực thi.
+    
+    \begin{lstlisting}
+    # test dataset txt file path
+    self.test_data_path = 'testing/real_test_1000.txt'   
+    \end{lstlisting}
+    \item Dùng lệnh command line sau để thực thi quá trình thực nghiệm kiểm tra hiệu suất của đề xuất sử dụng SPANet cho việc loại bỏ vệt mưa trên ảnh.
+    \begin{lstlisting}
+    python main.py -a test -m latest
+    \end{lstlisting}
+\end{itemize}
+\subsection{Kết quả thực nghiệm}
+\hspace{10mm}{Kết quả thực nghiệm phương pháp SPANet được đánh giá qua hai chỉ số độ đo là Peak signal-to-noise ratio (PSNR),   Structural similarity index measure (SSIM).}
+\begin{itemize}
+    \item Kết quả chạy thực nghiệm trên tập main-test:
+    \begin{itemize}
+        \item PSNR: 38.5323
+        \item SSIM: 0.9875
+    \end{itemize}
+    \item Kết quả chạy thực nghiệm trên tập internal-test:
+    \begin{itemize}
+        \item PSNR: 31.6996
+        \item SSIM: 0.9378
+    \end{itemize}
+\end{itemize}
+
+\subsection{So sánh kết quả thực nghiệm với kết quả của bài báo}
+\hspace{10mm}{Chỉ tiêu so sánh cũng căn cứ vào hai độ đo rất thông dụng trong các bài toán nâng cao chất lượng ảnh được trình bày ở mục 3.2.}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+ & \multicolumn{1}{l|}{\textbf{main-test}} & \multicolumn{1}{l|}{\textbf{internal-test}} & \multicolumn{1}{l|}{\textbf{author (SPANet)}} \\ \hline
+\textbf{PSNR} & 38.5323 & 31.6996 & {[}38.02, 38.53{]} \\ \hline
+\textbf{SSIM} & 0.9875 & 0.9378 & {[}0.9868, 0.9875{]} \\ \hline
+\end{tabular}
+\caption[Bảng so sánh kết quả thực nghiệm]{Kết quả thực nghiệm dựa trên PSNR, SSIM \cite{hore2010image}}
+\label{tab:so-sanh-ket-qua}
+\end{table}
+
+\begin{itemize}
+    \item Peak signal-to-noise ratio (PSNR)
+    \item Structural similarity index measure (SSIM)
+\end{itemize}
+
+
+\hspace{5mm}{Kết quả sau khi chạy thực nghiệm thu được xấp xỉ gần đúng với kết quả đã được công bố trong bài báo. Số liệu hai độ đo PSNR và SSIM của kết quả được tính bằng cách sử dụng skimage.measure, một bộ khung thư viện được build-in sẵn bằng ngôn ngữ python (Bảng \ref{tab:so-sanh-ket-qua}).
+}
+
+

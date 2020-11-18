@@ -1,0 +1,34 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\babel@toc {english}{}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces (a) Ảnh không mưa, (b) Ảnh có mưa\relax }}{2}{figure.caption.12}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces (a) Giọt mưa, (b) Vệt mưa, (c) Mưa và sương mù.\relax }}{7}{figure.caption.14}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Minh họa mạng Neural Network\relax }}{11}{figure.caption.27}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Tế bào thần kinh sinh học\relax }}{12}{figure.caption.29}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Mô hình neural nhân tạo\relax }}{13}{figure.caption.31}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Kiến trúc mạng neural nhân tạo với 3 lớp ẩn\relax }}{14}{figure.caption.33}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Đồ thị hàm Sigmoid\relax }}{15}{figure.caption.35}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Đồ thị hàm Tanh\relax }}{16}{figure.caption.36}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces So sánh đồ thị Sigmoid và ReLU\relax }}{17}{figure.caption.37}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Đồ thị Softmax\relax }}{18}{figure.caption.38}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Kiến trúc AlexNet (CNN)\relax }}{19}{figure.caption.43}%
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Kiến trúc chuẩn mạng VGG - 16 \cite {simonyan2014very}\relax }}{22}{figure.caption.48}%
+\contentsline {figure}{\numberline {2.11}{\ignorespaces Kiến trúc IRNN 2 vòng 4 hướng\relax }}{24}{figure.caption.51}%
+\contentsline {figure}{\numberline {2.12}{\ignorespaces Residual Blocks (RB) \cite {dutta2018effective}\relax }}{25}{figure.caption.54}%
+\contentsline {figure}{\numberline {2.13}{\ignorespaces Spatial Attentive Block (SAB)\relax }}{27}{figure.caption.56}%
+\contentsline {figure}{\numberline {2.14}{\ignorespaces Spatial Attentive Residual Block (SARB)\relax }}{28}{figure.caption.58}%
+\contentsline {figure}{\numberline {2.15}{\ignorespaces Đồ thị hàm ReLU\relax }}{30}{figure.caption.59}%
+\contentsline {figure}{\numberline {2.16}{\ignorespaces Spatial Attentive Module (SAM)\relax }}{31}{figure.caption.61}%
+\contentsline {figure}{\numberline {2.17}{\ignorespaces Dilated convolution l=1 (left), l=2 (Middle), l=4 (Right)\relax }}{33}{figure.caption.64}%
+\contentsline {figure}{\numberline {2.18}{\ignorespaces Spatial Attentive Network (SPANet)\relax }}{36}{figure.caption.66}%
+\contentsline {figure}{\numberline {2.19}{\ignorespaces Kiến trúc mạng SPANet\relax }}{37}{figure.caption.67}%
+\contentsline {figure}{\numberline {2.20}{\ignorespaces Kết quả so sánh 1\relax }}{38}{figure.caption.69}%
+\contentsline {figure}{\numberline {2.21}{\ignorespaces Kết quả so sánh 2\relax }}{39}{figure.caption.70}%
+\contentsline {figure}{\numberline {2.22}{\ignorespaces (a) Pixels trong chuỗi hình ảnh mưa, (b) Biểu đồ phân bố cường độ của pixels\relax }}{40}{figure.caption.73}%
+\contentsline {figure}{\numberline {2.23}{\ignorespaces (a) Đường ống của xấp xỉ nền, (b)Tính toán phạm vi phần trăm cho giá trị chế độ\relax }}{41}{figure.caption.75}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Ảnh mưa từ tập dữ liệu train\relax }}{43}{figure.caption.82}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces (a) Ảnh không mưa, (b) Ảnh có mưa\relax }}{45}{figure.caption.85}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Ảnh lấy ngẫu nhiên từ internet\relax }}{46}{figure.caption.86}%
+\addvspace {10\p@ }

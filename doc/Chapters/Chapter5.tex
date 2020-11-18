@@ -1,0 +1,28 @@
+\chapter{Kết luận}
+\label{Chapter5}
+\hspace{10mm}{Trong chương này chúng tôi sẽ tổng hợp lại những gì chúng tôi đã làm được đối với bài toán xóa vệt mưa trên ảnh.}
+\section{Những kết quả đạt được}
+\begin{itemize}
+    \item Tìm hiểu phương pháp bán tự động kết hợp các đặc tính tạm thời của vệt mưa và giám sát của con người để tạo ra ảnh không mưa từ chuỗi các ảnh mưa.
+    \item Tiếp cận qui trình tạo dataset quy mô lớn khoảng 29.5k cặp ảnh mưa/ không mưa độ phân giải cao. Các thí nghiệm minh chứng rằng các phương pháp ứng dụng CNNs tiên tiến đi trước có sự cải thiện rõ về hiệu suất bằng cách đào tạo bộ dữ liệu đề xuất này.
+    \item Phát hiện yếu tố chi phối hiệu suất của các phương pháp đi trước chính là sự phân phối ngẫu nhiên của các vệt mưa thật sự trên ảnh thu được.
+    \item Để cải thiện về hiệu suất xóa vệt mưa trên ảnh, nhóm đã nghiên cứu, và thực nghiệm một phương pháp đề xuất một mạng lưới chú ý không gian mới (SPANet) có thể học cách xác định và loại bỏ các vệt mưa theo cách chú ý không gian global-to-local. Đánh giá mở rộng chứng minh tính ưu việt của phương pháp được đề xuất so với các phương pháp khác.
+    \item Ứng dụng hai độ đo thuộc bộ qui chuẩn đánh giá chất lượng hình ảnh vào kết quả thực nghiệm của phương pháp (SPANet).
+    \item Kết quả đánh giá thực nghiệm cho thấy,  những gì nhóm nghiên cứu đã thực nghiệm cho kết quả xấp xỉ chính xác so với bài báo được công bố ở hội nghị CVPR - 2019.
+\end{itemize}
+\section{Khó khăn}
+\begin{itemize}
+    \item Tìm hiểu cơ chế hoạt động cốt lõi của một mạng CNNs phức tạp.
+    \item Dữ liệu được sử dụng cho bộ internal-test còn giới hạn về mặt số lượng, phong phú về hình thái ngẫu nhiên của vệt mưa.
+    \item Cơ sở hạ tầng còn nhiều hạn chế cho quá trình đào tạo lại mô hình của phương pháp đề xuất.
+\end{itemize}
+
+\section{Hướng phát triển}
+\hspace{10mm}{Một số hướng phát triển cho đồ án chuyên ngành này bao gồm:}
+\begin{itemize}
+    \item Áp dụng qui trình tạo bộ dữ liệu theo cặp ảnh với độ phân giải cao để tạo ra bộ dữ liệu thử nghiệm trong lĩnh vực xóa mưa trên ảnh, đồng thời phát triển rộng ra các lĩnh vực xóa sương mù, khói cản trở giao thông trên ảnh tĩnh.
+    \item Sử dụng phương pháp đề xuất SPANet thực nghiệm trên các bộ dữ liệu đã được công bố, dựa trên qui chuẩn đáng giá chất lượng ảnh trong bài toán xoá mưa trên hình ảnh đơn và tái lập bảng đáng giá hiệu suất ổn định của mạng chú ý không gian (SPANet).
+    \item Nghiên cứu sâu hơn nhưng yếu tố hạn chế tiềm ẩn gây ảnh hưởng đến hiệu suất xóa mưa trên ảnh tĩnh, đề xuất một qui trình tiền xử lý ảnh với mục tiêu tối ưu lượng thông tin khai thác từ ảnh từ đó đưa ra mô hình huấn luyện đạt hiệu suất cao.
+    \item Kế thừa nghiên cứu hiện tại trong đồ án chuyên ngành để phát triển một ứng dụng đa nền tảng thực thi tác vụ xóa mưa trên ảnh tĩnh, đáp ứng nhu cầu chỉnh sửa ảnh của người dùng trong khóa luận tốt nghiệp.
+    
+\end{itemize}

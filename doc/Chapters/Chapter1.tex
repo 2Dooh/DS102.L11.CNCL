@@ -1,0 +1,118 @@
+% Sửa lại giới thiệu bài toán, "tạo" ảnh, ảnh input, thách thức,
+% Chapter 1
+
+\chapter{Tổng quan} % Main chapter title
+
+\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+\section{Giới thiệu đề tài}
+\subsection{Tổng quan}
+\hspace{10mm}{
+Chụp ảnh là một cách để ghi lại những giây phút mà chúng ta muốn lưu giữ, những hình ảnh sống động đó sẽ kể lại cả một kỉ niệm, cả một câu chuyên, một quá trình cho người nhìn vào nó.
+Những khoảnh khắc xinh đẹp, bùng cháy, những hình ảnh chớp nhoáng, những giây phút bên nhau... đều được ghi lại một cách chân thực nhất trong những tấm hình.}
+
+\hspace{5mm}{
+Một hình ảnh được chụp kèm theo các yếu tố không mong đợi như vệt mưa, hạt mưa, sương mù... Hiển nhiên rằng, chúng sẽ gây cản trở nghiêm trọng đến khả năng quan sát các vật thể trong ảnh cũng như là giá trị thực sự của khoảnh khắc mà bức ảnh muốn lưu lại.
+}
+
+\hspace{5mm}{Trong những năm gần đây, giới nghiên cứu đang chứng kiến sự tiến bộ đáng kể trong việc xoá bỏ các yếu tố gây cản trở tầm nhìn trên một bức ảnh. Sự phát triển của lĩnh vực này chung quy lại chính là do sự phát triển của nhiều thuật toán và phương pháp ứng dụng các mô hình học sâu dựa trên mạng neural tích chập (CNNs). Đây chính là một trong những chìa khóa mang theo sứ mệnh kết nối hình ảnh và khoảnh khắc trọn vẹn.}
+
+\subsection{Giới thiệu bài toán} 
+\hspace{10mm}{Single image deraining là bài toán có mục tiêu là loại bỏ các yếu tố cản trở vật thể trên ảnh, mà cụ thể ở đây là mưa. Bài toán Single image deraining có đầu vào là một bức ảnh có mưa và đầu ra là ảnh đã được xoá bỏ mưa (Hình \ref{fig:gioi-thieu-bai-toan}).\\} 
+
+\begin{figure}[ht!]
+    \includegraphics[width=\textwidth]{Images/Chapter-3/img-Ch3-mua-gt-362.png}
+    \caption{(a) Ảnh không mưa,  (b) Ảnh có mưa}
+    \label{fig:gioi-thieu-bai-toan}
+\end{figure}
+\subsection{Đối tượng nghiên cứu}
+\hspace{10mm}{Hình ảnh có tầm nhìn bị ảnh hưởng do các yếu tố ngoại cảnh. Trong đồ án này, mưa là đối tượng được nhóm tác giả nghiên cứu. Hiện nay, mưa được chia thành 3 loại chính (\ref{fig:rain}):}
+\begin{itemize}
+    \item Giọt mưa
+    \item Vệt mưa
+    \item Mưa và sương mù
+\end{itemize}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=15cm]{Images/Chapter-1/rain.png}
+    \caption{(a) Giọt mưa, (b) Vệt mưa, (c) Mưa và sương mù.}
+    \label{fig:rain}
+\end{figure}
+\section{Thách thức của bài toán và giải pháp đã công bố}
+\subsection{Thách thức}
+\begin{itemize}
+    \item Đầu tiên, các bộ dữ liệu tổng hợp hình ảnh mưa hiện có:  Multi-Purpose Image Deraining (MPID) \cite{Li2019DerainBenchmark},... vẫn còn nhiều hạn chế về mặt thực tế. Các bộ dữ liệu thường được tạo ra từ một tấm ảnh bình thường sau đó thêm hạt mưa vào ảnh ban đầu. Tuy nhiên, phương pháp này vẫn chưa thể mô hình hoá các đặc điểm vật lý của giọt mưa trong tự nhiên như hình dạng, hướng và cường độ mưa.
+    \item Thứ hai, các nhà nghiên cứu chủ yếu đánh giá hiệu suất dựa trên việc so sánh trực quan với hình ảnh thực tế. Điều này khiến cho việc đánh giá bớt khách quan đi.
+    \item Thách thức cốt lõi nhất trong việc đề xuất cách tổ chức dữ liệu dưới dạng tập hợp các cặp ảnh (ảnh mưa/ ảnh không mưa) đó là hai loại ảnh này không thể tạo ra trong cùng một thời điểm, đó là do tính chất ngẫu nhiên của mưa và giới hạn về thời gian thực của các kỹ thuật tạo ảnh.
+\end{itemize}
+\subsection{Giải pháp đã được công bố}
+\hspace{10mm}{Cho đến thời điểm hiện tại việc nghiên cứu giải pháp giải quyết vấn đề xóa yếu tố mưa trên ảnh cũng đạt nhiều thành tựu đáng kể. Nhiều phương pháp, thuật toán đã được công bố tại các hội nghị về thị giác máy tính. Tuy nhiên, các thuật toán này chủ yếu được đánh giá bằng cách sử dụng một số loại hình ảnh tổng hợp nhất định, giả sử một mô hình mưa cụ thể, cộng với một vài hình ảnh thực. Do đó, không rõ các thuật toán này sẽ hoạt động như thế nào trên các hình ảnh mưa thu được trong thế giới thật và cách chúng ta có thể đánh giá tiến trình trong lĩnh vực này.}
+
+\hspace{5mm}{
+Dưới đây là sáu phương pháp hoặc đề xuất được xem là state-of-the-art trong lĩnh vực xóa mưa trên ảnh tĩnh, áp dụng trên bộ dữ liệu Multi-Purpose Image Deraining (MPID) \cite{Li2019DerainBenchmark}.
+}
+
+\begin{itemize}
+    \item Gaussian mixture models (GMMs) \cite{li2016rain}
+    \item JOint Rain DEtection and Removal (JORDER) \cite{yang2017deep}
+    \item Deep Detail Network (DDN) \cite{fu2017removing}
+    \item Conditional Generative Adversarial Network (CGAN) \cite{zhang2019image}
+    \item Density-aware Image Deraining method using a Multistream Dense Network (DIDMDN) \cite{zhang2018density}
+    \item DeRaindrop \cite{qian2018attentive}
+\end{itemize}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+ & \multicolumn{1}{l|}{Degraded} & \multicolumn{1}{l|}{GMM} & \multicolumn{1}{l|}{JORDER} & \multicolumn{1}{l|}{DDN} & \multicolumn{1}{l|}{CGAN} & \multicolumn{1}{l|}{DID-MDN} \\ \hline
+\multicolumn{7}{|c|}{rain streak} \\ \hline
+\textbf{PSNR} & 25.95 & 26.88 & 26.26 & \textbf{29.39} & 21.86 & 26.80 \\ \hline
+\textbf{SSIM} & 0.7565 & 0.7674 & \textbf{0.8089} & 0.7854 & 0.6277 & 0.8028 \\ \hline
+\end{tabular}
+\caption[Bảng thông kê hiệu suất các phương pháp đề xuất]{Đánh giá hiệu suất dựa trên độ đo PSNR, SSIM \cite{Li2019DerainBenchmark} \cite{hore2010image}}
+\label{tab:danh-gia-1}
+\end{table}
+
+%----------------------------------------------------------------------------------------
+\section{Mục tiêu, đóng góp}
+\subsection{Mục tiêu}
+\begin{itemize}
+    \item Hiểu được pipeline cơ bản của tiến trình xoá mưa trên ảnh đơn (single image deraining)
+    \item Nắm bắt ý tưởng, kỹ thuật cơ sở của state-of-the-art SPANet.
+    \item Cài đặt và thực nghiệm phương pháp đề xuất đã tìm hiểu.
+    \item Thực nghiệm phương pháp trên các bộ dữ liệu đã được công bố trong lĩnh vực rain removal.
+    \item Thu thập kết quả thực nghiệm, đánh giá hiệu suất, thách thức của phương pháp, đưa ra đề xuất phát triển.
+\end{itemize}
+
+\subsection{Đóng góp}
+\begin{itemize}
+    \item Tìm hiểu và thực nghiệm phương pháp đề xuất bán tự động kết hợp các đặc tính tạm thời của mưa cùng với sự giám sát của con người để xây dựng một bộ dữ liệu mưa thật quy mô lớn.
+    \item Thực nghiệm trên bộ dữ liệu khoảng 29.5K ảnh, gồm tập hợp các cặp ảnh đối chiếu tương phản (ảnh mưa tự nhiên có độ phân giải cao/ ảnh không mưa). Cách tổ chức dữ liệu này giúp cải thiện hiệu suất cho các phương pháp state-of-the-art trong bài toán xóa mưa trên ảnh tĩnh.
+    \item Nghiên cứu kiến trúc mạng SPatial Attentive Network (SPANet) một đề xuất state-of-the-art ở hội nghị CVPR - 2019 nhằm giải quyết bài toán loại bỏ vệt mưa trên ảnh.
+    \item Ứng dụng hai độ đo Peak signal-to-noise ratio (PSNR) và Structural similarity index measure (SSIM) đánh giá kết quả thực nghiệm từ kiến trúc SPANet.
+\end{itemize}
+
+\clearpage
+\section{Nội dung đồ án chuyên ngành}
+\begin{itemize}
+    \item Cái nhìn tổng quan về phương pháp học sâu, tiềm năng ứng dụng trong nghiên cứu và thực nghiệm.
+    \item Tìm hiểu cách giải quyết bài toán xoá mưa trên ảnh đơn (single image deraining).
+    \item Nghiên cứu về state-of-the-art Spatial Attentive Single-Image Deraining \cite{wang2019spatial}.
+    \item Qui trình cài đặt, thực nghiệm phương pháp trên bộ dữ liệu tương ứng.
+    \item Kết luận, đánh giá kết quả đạt được, nêu hạn chế, định hướng phát triển.
+\end{itemize}
+
+\section{Cấu trúc đồ án}
+\hspace{10mm}{Phần còn lại của khóa luận được tổ chức như sau: Ở chương 2 chúng tôi sẽ trình bày các cơ sở lý thuyết phục vụ cho bài toán và trình bày chi tiết các phần quan trọng trong state-of-the-art Spatial Attentive Network. Chương 3 chúng tôi sẽ trình bày môi trường và cách thức chạy thực nghiệm, kết quả đánh giá hiệu suất và nhận xét. Chương 4 đưa ra kết luận và tổng kết về những gì đạt được, cùng với đó là đề ra các hướng nghiên cứu trong tương lai.}

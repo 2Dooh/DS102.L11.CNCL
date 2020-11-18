@@ -38,12 +38,16 @@
 - > conda install scikit-learn
 - > pip install opencv-python
 
+
 ### **II. Cai dat Latex**
 
 - Mo terminal
 - > sudo apt install texlive
 - > sudo apt install latexmk
-
+- Neu bi loi thi dung lenh sau search package bi thieu
+- > sudo apt-cache search "package"
+- Cai package
+- > sudo apt install "package"
 ### **III. Set up VSCode**
 
 #### 1. Download + install vscode
