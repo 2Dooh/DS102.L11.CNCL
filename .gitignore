@@ -129,6 +129,4 @@ dmypy.json
 .pyre/
 
 .temp
-
-.img/
-.data/cropped_imgs/
+.data
