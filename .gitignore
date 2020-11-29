@@ -130,5 +130,5 @@ dmypy.json
 
 .temp
 
-img/
-data/imgs/
+.img/
+.data/cropped_imgs/
