@@ -1,5 +1,4 @@
 import json
-from numpy.core.fromnumeric import mean
 import xmltodict
 import os
 import click
