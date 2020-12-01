@@ -1,14 +1,15 @@
 import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 import torchvision.datasets as datasets
 from utils.cutout import Cutout
+from utils.split import split
+
 
 class IntelImageClassification:
     IIC_MEAN = [.5] * 3
     IIC_STD = [.5] * 3
     def __init__(self, 
-                 train_folder,
-                 test_folder, 
+                 folder,
                  num_workers, 
                  batch_size, 
                  pin_memory,
@@ -25,11 +26,14 @@ class IntelImageClassification:
         valid_transform = transforms.Compose([transforms.ToTensor(), 
                                               transforms.Normalize(self.IIC_MEAN, self.IIC_STD)])
 
-        train_data = datasets.ImageFolder(root=train_folder,
-                                          transform=train_transform)
+        train_indices, test_indices = split(folder)
 
-        test_data = datasets.ImageFolder(root=test_folder,
-                                         transform=valid_transform)
+        dataset_train = datasets.ImageFolder(root=folder, transform=train_transform)
+        dataset_test = datasets.ImageFolder(root=folder, transform=valid_transform)
+        
+        train_data = Subset(dataset_train, train_indices)
+
+        test_data = Subset(dataset_test, test_indices)
         
         self.train_loader = DataLoader(dataset=train_data,
                                        batch_size=batch_size,
