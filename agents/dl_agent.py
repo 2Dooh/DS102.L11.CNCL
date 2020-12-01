@@ -207,7 +207,7 @@ class DeepLearningAgent(Agent):
         inputs, targets = inputs.to(self.device), targets.to(self.device)
         self.optimizer.zero_grad()
         outputs = self.model(inputs)
-        loss = self.criterion(outputs, targets)
+        loss = self.criterion(outputs, targets.view_as(outputs[:, 1]))
 
         loss.backward()
         if self.grad_clip:
@@ -226,7 +226,7 @@ class DeepLearningAgent(Agent):
                 inputs, targets = inputs.to(self.device), targets.to(self.device)
 
                 outputs = self.model(inputs)
-                test_loss += self.criterion(outputs, targets).item()  # sum up batch loss
+                test_loss += self.criterion(outputs, targets.view_as(outputs[:, 1])).item()  # sum up batch loss
 
                 predicted = self.predict(outputs)
                 total += targets.size(0)
