@@ -3,22 +3,20 @@
     "mode": "train",
     "cuda": true,
     "seed": 0,
-    "max_epochs": 600,
+    "max_epochs": 50,
     "verbose": true,
-    "report_freq": 250,
+    "report_freq": 95,
     "validate_every": 1,
     
-    "data_loader": "FakeData",
+    "data_loader": "CroppedImages",
     "data_loader_args": {
-        "train_size": 500,
-        "test_size": 100,
+        "folder": "./data/ImageFolder",
         "pin_memory": true,
-        "n_classes": 6,
-        "num_workers": 2,
-        "batch_size": 96,
-        "input_size": [3, 64, 64],
+        "num_workers": 4,
+        "batch_size": 16,
+        "input_size": [3, 200, 150],
         "cutout": true,
-        "cutout_length": 16
+        "cutout_length": 75
     },
 
     "criterion": "CrossEntropyLoss",
@@ -33,11 +31,11 @@
         "weight_decay": 3e-4
     },
     "scheduler": "CosineAnnealingLR",
-    "scheduler_args": {"T_max": 600, "eta_min": 0},
+    "scheduler_args": {"T_max": 50, "eta_min": 0},
 
     "model": "CNN",
     "model_args": {
-        "input_size": [3, 64, 64],
+        "input_size": [3, 200, 150],
         "output_size": 6,
         "n_bits": {"kernel_sizes": 2, "pool_sizes": 1, "channels": 2},
         "target_val": {
@@ -49,5 +47,5 @@
     },
 
     "summary_writer": true,
-    "save_path": "./FakeData"
+    "save_path": "./pretrained_weights/CroppedImages/seed_0"
 }
