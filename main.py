@@ -5,6 +5,7 @@ import time
 import click
 import os
 import datetime
+from utils.displayer import print_info
 
 @click.command()
 @click.option('--config', required=True)
@@ -14,7 +15,7 @@ def cli(config, seed):
         config = json.load(json_file)
     agent_constructor = globals()[config['agent']]
 
-    agent = agent_constructor(**config, seed=seed)
+    agent = agent_constructor(**config, callback=print_info)
     start = time.time()
 
     agent.run()
@@ -24,4 +25,4 @@ def cli(config, seed):
     print('Elapsed time: {}'.format(end))
 
 if __name__ == '__main__':
-    cli()
+    cli(['--config', 'train.json'])

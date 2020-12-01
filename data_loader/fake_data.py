@@ -13,7 +13,7 @@ class FakeData:
                  num_workers, 
                  **kwargs):
 
-        train_transform = transforms.Compose([transforms.RandomCrop(32, padding=4),
+        train_transform = transforms.Compose([transforms.RandomCrop(64, padding=4),
                                               transforms.RandomHorizontalFlip(),
                                               transforms.ToTensor()])
         valid_transform = transforms.Compose([transforms.ToTensor()])

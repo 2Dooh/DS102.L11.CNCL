@@ -27,7 +27,6 @@ def cli(annot_path):
     print(stats.format('W', widths.max(), widths.min(), widths.mean(), widths.std()))
     print(stats.format('H', heights.max(), heights.min(), heights.mean(), heights.std()))
     print(dict(zip(*[res.tolist() for res in np.unique(labels, return_counts=True)])))
-    # print([res.tolist() for res in np.unique(labels, return_counts=True)])
             
 if __name__ == '__main__':
     cli()
