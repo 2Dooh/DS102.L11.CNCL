@@ -12,6 +12,7 @@ class CNN(Module):
                  n_nodes,
                  n_bits,
                  target_val,
+                 repeats=None,
                  **kwargs):
         
         super(CNN, self).__init__()
@@ -21,12 +22,12 @@ class CNN(Module):
 
         genome_dict, list_indices = self.setup_model_args(n_nodes, genome, n_bits, target_val, input_size)
 
-        self.model = VariableGenomeDecoder(**genome_dict, repeats=None).get_model()
+        self.model = VariableGenomeDecoder(**genome_dict, repeats=repeats).get_model()
         self.genome_model = list_indices
 
         out = None
         with torch.no_grad():
-            out = self.model(torch.autograd.Variable(torch.zeros(2, *(input_size))))
+            out = self.model.to('cuda:0')(torch.empty(1, *(input_size), device='cuda:0'))
         shape = out.data.shape
 
         self.gap = nn.AvgPool2d(kernel_size=(shape[-2], shape[-1]), stride=1)

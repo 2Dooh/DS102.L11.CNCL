@@ -15,7 +15,7 @@ def cli(config, seed):
         config = json.load(json_file)
     agent_constructor = globals()[config['agent']]
 
-    agent = agent_constructor(**config, callback=print_info)
+    agent = agent_constructor(**config, callback=None)
     start = time.time()
 
     agent.run()
@@ -25,4 +25,4 @@ def cli(config, seed):
     print('Elapsed time: {}'.format(end))
 
 if __name__ == '__main__':
-    cli(['--config', 'train.json'])
+    cli(['--config', 'fake_data.json'])

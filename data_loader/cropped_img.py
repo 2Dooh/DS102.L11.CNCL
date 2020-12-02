@@ -42,9 +42,8 @@ class CroppedImages:
                                        num_workers=num_workers,
                                        shuffle=True)
                                        
-        # self.test_loader = DataLoader(dataset=test_data,
-        #                               batch_size=batch_size,
-        #                               pin_memory=pin_memory,
-        #                               num_workers=num_workers,
-        #                               shuffle=False)
-        self.test_loader = None
+        self.test_loader = DataLoader(dataset=test_data,
+                                      batch_size=batch_size,
+                                      pin_memory=pin_memory,
+                                      num_workers=num_workers,
+                                      shuffle=False)

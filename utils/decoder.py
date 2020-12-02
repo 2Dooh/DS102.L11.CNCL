@@ -101,7 +101,7 @@ class ChannelBasedDecoder(Decoder):
         for phase, pool_size, repeat in zip(phases, self._pool_sizes, self._repeats):
             for _ in range(repeat):
                 layers.append(phase)
-            layers.append(nn.MaxPool2d(kernel_size=pool_size, stride=2))  # TODO: Generalize this, or consider a new genome.
+                layers.append(nn.MaxPool2d(kernel_size=pool_size, stride=2))  # TODO: Generalize this, or consider a new genome.
 
         layers.append(last_phase)
         return layers

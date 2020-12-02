@@ -1,0 +1,46 @@
+{
+    "agent": "SlidingWindow",
+    "mode": "eval",
+    "cuda": true,
+    "seed": 0,
+    "verbose": true,
+    "report_freq": 95,
+    "validate_every": 1,
+    
+    "data_loader": "BigImages",
+    "data_loader_args": {
+        "folder": "./data/video20-305",
+        "pin_memory": true,
+        "num_workers": 4,
+        "batch_size": 1,
+        "input_size": [3, 1080, 1920]
+    },
+
+    "criterion": "CrossEntropyLoss",
+    "criterion_args": {},
+
+
+    "model": "CNN",
+    "model_args": {
+        "input_size": [3, 200, 150],
+        "output_size": 6,
+        "n_bits": {"kernel_sizes": 2, "pool_sizes": 1, "channels": 2},
+        "target_val": {
+            "kernel_sizes": [3, 5, 7, 9],
+            "pool_sizes": [1, 2],
+            "channels": [16, 32, 64, 128]},
+        "n_nodes": [6, 6, 6],
+        "genome": "1 0 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1 1 0 0 0 1 1 0 1 0 0 0 1 1 1 1 0 1 1 1 1 1 1 1 1 0 0 0 0 0 1"
+    },
+
+    "optimizer": "SGD",
+    "optimizer_args": {
+        "lr": 0.025,
+        "momentum": 0.9,
+        "weight_decay": 3e-4
+    },
+
+    "summary_writer": false,
+    "save_path": "./pretrained_weights/CroppedImages/seed_0",
+    "checkpoint_file": "./pretrained_weights/CroppedImages/seed_0/save_test.pth.tar"
+}

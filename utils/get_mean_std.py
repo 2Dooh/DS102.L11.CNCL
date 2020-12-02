@@ -1,4 +1,5 @@
 from __future__ import print_function
+from .custom_datasets import *
 
 import matplotlib
 matplotlib.use("pdf")
@@ -16,7 +17,7 @@ import click
 @click.option('--batch_size', default='200', type=int, help='dataset')
 @click.option('--folder', default='CIFAR10', type=str)
 def cli(dataset, batch_size, folder):
-
+    custom = False
     # Data
     print('==> Preparing data..')
     transform_train = transforms.Compose([transforms.ToTensor()])
@@ -26,6 +27,9 @@ def cli(dataset, batch_size, folder):
                                               split='train', 
                                               download=True,
                                               transform=transform_train)
+    elif globals()[dataset] is not None:
+        custom = True
+        trainset = globals()[dataset](folder, transform_train)
     else:
         try:
             trainset = getattr(datasets, dataset)(root='./data/' + dataset, 
@@ -41,26 +45,48 @@ def cli(dataset, batch_size, folder):
     trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, num_workers=2)
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     h, w = 0, 0
-    for batch_idx, (inputs, _) in enumerate(trainloader):
-        inputs = inputs.to(device)
-        if batch_idx == 0:
-            h, w = inputs.size(2), inputs.size(3)
-            print(inputs.min(), inputs.max())
-            chsum = inputs.sum(dim=(0, 2, 3), keepdim=True)
-        else:
-            chsum += inputs.sum(dim=(0, 2, 3), keepdim=True)
-    mean = chsum/len(trainset)/h/w
-    print('mean: %s' % mean.view(-1))
+    if custom:
+        for batch_idx, (inputs) in enumerate(trainloader):
+            inputs = inputs.to(device)
+            if batch_idx == 0:
+                h, w = inputs.size(2), inputs.size(3)
+                print(inputs.min(), inputs.max())
+                chsum = inputs.sum(dim=(0, 2, 3), keepdim=True)
+            else:
+                chsum += inputs.sum(dim=(0, 2, 3), keepdim=True)
+        mean = chsum/len(trainset)/h/w
+        print('mean: %s' % mean.view(-1))
 
-    chsum = None
-    for batch_idx, (inputs, _) in enumerate(trainloader):
-        inputs = inputs.to(device)
-        if batch_idx == 0:
-            chsum = (inputs - mean).pow(2).sum(dim=(0, 2, 3), keepdim=True)
-        else:
-            chsum += (inputs - mean).pow(2).sum(dim=(0, 2, 3), keepdim=True)
-    std = torch.sqrt(chsum/(len(trainset) * h * w - 1))
-    print('std: %s' % std.view(-1))
+        chsum = None
+        for batch_idx, (inputs) in enumerate(trainloader):
+            inputs = inputs.to(device)
+            if batch_idx == 0:
+                chsum = (inputs - mean).pow(2).sum(dim=(0, 2, 3), keepdim=True)
+            else:
+                chsum += (inputs - mean).pow(2).sum(dim=(0, 2, 3), keepdim=True)
+        std = torch.sqrt(chsum/(len(trainset) * h * w - 1))
+        print('std: %s' % std.view(-1))
+    else:
+        for batch_idx, (inputs, _) in enumerate(trainloader):
+            inputs = inputs.to(device)
+            if batch_idx == 0:
+                h, w = inputs.size(2), inputs.size(3)
+                print(inputs.min(), inputs.max())
+                chsum = inputs.sum(dim=(0, 2, 3), keepdim=True)
+            else:
+                chsum += inputs.sum(dim=(0, 2, 3), keepdim=True)
+        mean = chsum/len(trainset)/h/w
+        print('mean: %s' % mean.view(-1))
+
+        chsum = None
+        for batch_idx, (inputs, _) in enumerate(trainloader):
+            inputs = inputs.to(device)
+            if batch_idx == 0:
+                chsum = (inputs - mean).pow(2).sum(dim=(0, 2, 3), keepdim=True)
+            else:
+                chsum += (inputs - mean).pow(2).sum(dim=(0, 2, 3), keepdim=True)
+        std = torch.sqrt(chsum/(len(trainset) * h * w - 1))
+        print('std: %s' % std.view(-1))
 
 if __name__ == '__main__':
     cli()
