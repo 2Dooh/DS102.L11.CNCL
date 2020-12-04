@@ -25,4 +25,4 @@ def cli(config, seed):
     print('Elapsed time: {}'.format(end))
 
 if __name__ == '__main__':
-    cli(['--config', 'fake_data.json'])
+    cli(['--config', 'train.json'])

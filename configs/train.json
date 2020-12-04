@@ -3,20 +3,20 @@
     "mode": "train",
     "cuda": true,
     "seed": 0,
-    "max_epochs": 50,
+    "max_epochs": 600,
     "verbose": true,
     "report_freq": 95,
     "validate_every": 1,
     
     "data_loader": "CroppedImages",
     "data_loader_args": {
-        "folder": "./data/ImageFolder",
+        "folder": "./data/CroppedImages32x32",
         "pin_memory": true,
         "num_workers": 4,
         "batch_size": 16,
-        "input_size": [3, 200, 150],
+        "input_size": [3, 32, 32],
         "cutout": true,
-        "cutout_length": 75
+        "cutout_length": 16
     },
 
     "criterion": "CrossEntropyLoss",
@@ -35,8 +35,8 @@
 
     "model": "CNN",
     "model_args": {
-        "input_size": [3, 200, 150],
-        "output_size": 6,
+        "input_size": [3, 32, 32],
+        "output_size": 7,
         "n_bits": {"kernel_sizes": 2, "pool_sizes": 1, "channels": 2},
         "target_val": {
             "kernel_sizes": [3, 5, 7, 9],

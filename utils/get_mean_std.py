@@ -1,5 +1,5 @@
 from __future__ import print_function
-from .custom_datasets import *
+from custom_datasets import *
 
 import matplotlib
 matplotlib.use("pdf")
@@ -27,7 +27,7 @@ def cli(dataset, batch_size, folder):
                                               split='train', 
                                               download=True,
                                               transform=transform_train)
-    elif globals()[dataset] is not None:
+    elif dataset in globals() is not None:
         custom = True
         trainset = globals()[dataset](folder, transform_train)
     else:
