@@ -5,15 +5,15 @@
     "seed": 0,
     "max_epochs": 600,
     "verbose": true,
-    "report_freq": 95,
+    "report_freq": 38,
     "validate_every": 1,
     
     "data_loader": "CroppedImages",
     "data_loader_args": {
-        "folder": "./data/CroppedImages32x32",
+        "folder": "./data/squared_rgb_32x32",
         "pin_memory": true,
         "num_workers": 4,
-        "batch_size": 16,
+        "batch_size": 96,
         "input_size": [3, 32, 32],
         "cutout": true,
         "cutout_length": 16
@@ -31,7 +31,9 @@
         "weight_decay": 3e-4
     },
     "scheduler": "CosineAnnealingLR",
-    "scheduler_args": {"T_max": 50, "eta_min": 0},
+    "scheduler_args": {"T_max": 600, "eta_min": 0},
+
+    "deterministic": false,
 
     "model": "CNN",
     "model_args": {
@@ -42,10 +44,11 @@
             "kernel_sizes": [3, 5, 7, 9],
             "pool_sizes": [1, 2],
             "channels": [16, 32, 64, 128]},
+
         "n_nodes": [6, 6, 6],
         "genome": "1 0 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1 1 0 0 0 1 1 0 1 0 0 0 1 1 1 1 0 1 1 1 1 1 1 1 1 0 0 0 0 0 1"
     },
 
     "summary_writer": true,
-    "save_path": "./pretrained_weights/CroppedImages/seed_0"
+    "save_path": "./pretrained_weights/squared_rgb_32x32/AP_seed_0"
 }

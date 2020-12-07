@@ -9,11 +9,13 @@ from torch import optim
 from torch.utils.tensorboard import SummaryWriter
 import torch
 
+from torchvision.ops import nms
+
+
 import os
 import datetime
 
-import pickle
-import pickle5
+import pickle5 as pickle
 
 class SlidingWindow(Agent):
     def __init__(self,
@@ -64,6 +66,7 @@ class SlidingWindow(Agent):
         
         # save important parameter
         self.data_info = data_loader_args
+        self.model_info = model_args
         self.mode = mode
         self.max_epochs = max_epochs
         self.verbose = verbose
@@ -222,15 +225,20 @@ class SlidingWindow(Agent):
         self.model.eval()
         test_loss = correct = total = 0
 
+        self.current_epoch = 1
+
         with torch.no_grad():
-            for step, (inputs) in enumerate(self.valid_queue):
+            for step, inputs in enumerate(self.valid_queue):
+
                 # inputs, targets = inputs.to(self.device), targets.to(self.device)
                 inputs = inputs.to(self.device)
-
+                # print(inputs.size())
                 outputs = self.model(inputs)
+                # print(outputs.size())
                 # test_loss += self.criterion(outputs, targets.view_as(outputs[:, 1])).item()  # sum up batch loss
 
                 predicted = self.predict(outputs)
+                print(predicted)
                 # total += targets.size(0)
                 # correct += predicted.eq(targets.view_as(predicted)).sum().item()
 
@@ -248,8 +256,32 @@ class SlidingWindow(Agent):
         return err, avg_loss
     
     def predict(self, outputs):
-        _, pred = outputs.max(1)
-        return pred
+        outputs = torch.nn.Softmax2d()(outputs)
+        scores, grid_pred = outputs.max(1)
+
+        x, y = torch.where(grid_pred[0] != 3)
+        max_x, max_y = self.data_info['input_size'][1:]
+        norm_x = x / max_x
+        norm_y = y / max_y
+        start_point = torch.vstack((norm_x, norm_y)).T.cpu()
+
+        img_size = torch.Tensor(self.data_info['input_size'][1:])
+        window_size = torch.Tensor(self.model_info['input_size'][1:])
+        end_point = start_point + (window_size / img_size) 
+        boxes = torch.cat([start_point, end_point], dim=1)
+
+        keep = nms(boxes=boxes.cuda(), 
+                   scores=scores[0, x, y].flatten(), 
+                   iou_threshold=.5)
+        
+        info = {'boxes': start_point[keep].cpu().numpy(), 
+                'labels': grid_pred[0, x[keep], y[keep]].cpu().numpy(),
+                'scores': scores[0, x[keep], y[keep]].cpu().numpy()}
+        with open('./logs_fhd/pred_{}.pickle'.format(self.current_epoch), 'wb') as f:
+          pickle.dump(info, f, pickle.HIGHEST_PROTOCOL)
+        res  = torch.unique(grid_pred, return_counts=True)
+        self.current_epoch += 1
+        return res
 
     def finalize(self):
         now = datetime.datetime.now()

@@ -1,5 +1,5 @@
 from __future__ import print_function
-from custom_datasets import *
+from .custom_datasets import *
 
 import matplotlib
 matplotlib.use("pdf")

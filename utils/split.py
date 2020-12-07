@@ -19,4 +19,4 @@ def split(path):
 
 
 
-split('./data/CroppedImages32x32')
+# split('./data/CroppedImages32x32')

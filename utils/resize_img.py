@@ -34,7 +34,7 @@ def resize_img_cli(
 def square_padding_img(img, mode='edge'):
     bias = (np.abs(np.diff(img.shape[:-1])) // 2).astype(np.int)[0]
     n_pads = ((0, 0), (bias, bias), (0, 0)) if img.shape[0] > img.shape[1] else ((bias, bias), (0, 0), (0, 0))
-    padded_img = np.pad(img, n_pads, mode=mode, constant_values=0)
+    padded_img = np.pad(img, n_pads, mode=mode)
     # assert(padded_img.shape[0] == padded_img.shape[1])
     return padded_img, bias
             

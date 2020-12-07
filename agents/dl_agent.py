@@ -9,10 +9,17 @@ from torch import optim
 from torch.utils.tensorboard import SummaryWriter
 import torch
 
+import numpy as np
+
 import os
 import datetime
 
-import pickle
+import pickle5 as pickle
+
+from sklearn.metrics import average_precision_score
+from sklearn.preprocessing import label_binarize
+import warnings
+warnings.filterwarnings("ignore")
 
 class DeepLearningAgent(Agent):
     def __init__(self,
@@ -123,7 +130,7 @@ class DeepLearningAgent(Agent):
     def load_checkpoint(self, path=None):
         if not path:
           return None
-        checkpoint = torch.load(path, map_location=self.device)
+        checkpoint = torch.load(path, map_location=self.device, pickle_module=pickle)
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.current_epoch = checkpoint['epoch'] + 1
@@ -142,7 +149,7 @@ class DeepLearningAgent(Agent):
         filepath = os.path.join(self.save_path, name.format(self.model.__class__.__name__,
                                                             self.current_epoch,
                                                             error_rate))
-        torch.save(checkpoint, filepath)
+        torch.save(checkpoint, filepath, pickle_module=pickle)
         
     def run(self):
         try:
@@ -161,7 +168,7 @@ class DeepLearningAgent(Agent):
             if self.current_epoch % self.validate_every == 0:
                 valid_err, _ = self.validate()
             
-            if valid_err < best_err:
+            if valid_err <= best_err:
                 best_err = valid_err
                 self.save_checkpoint(valid_err, best_err)
 
@@ -221,6 +228,7 @@ class DeepLearningAgent(Agent):
         self.model.eval()
         test_loss = correct = total = 0
 
+        y_true, y_score = [], []
         with torch.no_grad():
             for step, (inputs, targets) in enumerate(self.valid_queue):
                 inputs, targets = inputs.to(self.device), targets.to(self.device)
@@ -232,16 +240,37 @@ class DeepLearningAgent(Agent):
                 total += targets.size(0)
                 correct += predicted.eq(targets.view_as(predicted)).sum().item()
 
+                y_true += [targets.cpu().numpy()]
+                y_score += [predicted.view_as(targets).cpu().numpy()]
+
+            y_true = np.concatenate(y_true)
+            y_score = np.concatenate(y_score)
+            onehot_targets = label_binarize(y_true, classes=range(y_true.max(axis=0)))
+            onehot_pred = label_binarize(y_score, classes=range(y_true.max(axis=0)))
+            
+
+            ap = average_precision_score(y_true=onehot_targets, 
+                                          y_score=onehot_pred, 
+                                          average='weighted')
+            # mAP = ap / (y_true.max(axis=0) + 1)
+                # correct = roc_auc_score(y_true=targets.flatten().cpu().numpy(),
+                #                         y_score=onehot_pred, 
+                #                         average='weighted', 
+                #                         multi_class='ovo')
+                # correct += predicted.eq(targets.view_as(predicted)).sum().item()
+
             avg_loss = test_loss/total
-            err = 100.*(1- (correct/total))
+            err = 100.*(1- (ap))
             if self.verbose:
-                acc = 100.*correct/total
+                acc = correct / 100
                 print(self.validate_msg.format('Test', avg_loss, correct, total, acc))
+                print('AP: {}%'.format(ap* 100))
 
         
         if self.summary_writer:
             self.summary_writer.add_scalar('Loss/test', avg_loss, self.current_epoch)
-            self.summary_writer.add_scalar('Error_rate/test', err, self.current_epoch)
+            self.summary_writer.add_scalar('Error_rate/test', 100.*(1 - (correct/total)), self.current_epoch)
+            self.summary_writer.add_scalar('Weighted_AP/test', 100.*ap, self.current_epoch)
 
         return err, avg_loss
     

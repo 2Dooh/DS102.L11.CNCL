@@ -5,7 +5,7 @@ import time
 import click
 import os
 import datetime
-from utils.displayer import print_info
+# from utils.displayer import print_info
 
 @click.command()
 @click.option('--config', required=True)
@@ -25,4 +25,4 @@ def cli(config, seed):
     print('Elapsed time: {}'.format(end))
 
 if __name__ == '__main__':
-    cli(['--config', 'train.json'])
+    cli(['--config', 'sliding_window.json'])

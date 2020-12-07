@@ -3,22 +3,26 @@ from torch.utils.data import DataLoader, Subset
 import torchvision.datasets as datasets
 from utils.cutout import Cutout
 from utils.split import split
+import numpy as np
 
 
 class CroppedImages:
-    MEAN = [0.4698, 0.4907, 0.5077]
-    STD = [0.2479, 0.2290, 0.2132]
+    # MEAN = [0.3663, 0.3837, 0.3534]
+    # STD = [0.3046, 0.2929, 0.2979]
+    MEAN = [.5] * 3
+    STD = [.5] * 3
     def __init__(self, 
                  folder,
                  num_workers, 
                  batch_size, 
                  pin_memory,
+                 input_size,
                  cutout=False,
                  cutout_length=None,
                  **kwargs):
         
         train_transform = transforms.Compose([
-                                              transforms.RandomCrop((200, 150), padding=4),
+                                              transforms.RandomCrop(input_size[1:], padding=4),
                                               transforms.RandomHorizontalFlip(),
                                               transforms.ToTensor(),
                                               transforms.Normalize(self.MEAN, self.STD)])
@@ -30,12 +34,14 @@ class CroppedImages:
         train_indices, test_indices = split(folder)
 
         dataset_train = datasets.ImageFolder(root=folder, transform=train_transform)
+        
+        
         dataset_test = datasets.ImageFolder(root=folder, transform=valid_transform)
         
         train_data = Subset(dataset_train, train_indices)
 
         test_data = Subset(dataset_test, test_indices)
-        
+
         self.train_loader = DataLoader(dataset=train_data,
                                        batch_size=batch_size,
                                        pin_memory=pin_memory,
