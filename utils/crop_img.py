@@ -8,7 +8,7 @@ import click
 import re
 import numpy as np
 import matplotlib.pyplot as plt
-
+from utils.convert_coord import convert_coords, reconvert_coords
 
 
 
@@ -31,6 +31,8 @@ def cli(annot_path,
             ordered_dict = xmltodict.parse(handle.read())
         annotation = json.loads(json.dumps(ordered_dict)) 
         objects = annotation['annotation']['object']
+        # remove label bicycle
+        objects = [i for i in objects if not (i['name'] == 'bicycle')]
         for idx_j, obj in enumerate(objects):
             label, coords = obj['name'], obj['bndbox']
             coord = np.array(list(coords.values()), dtype=np.float).reshape((2, 2)).T
