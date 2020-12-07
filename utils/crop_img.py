@@ -1,5 +1,5 @@
 from numpy.core.fromnumeric import shape
-from resize_img import square_padding_img
+from .resize_img import square_padding_img
 import cv2 as cv
 import json
 import xmltodict
@@ -9,12 +9,15 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+
+
 @click.command()
 @click.option('--annot_path', required=True)
 @click.option('--img_path', required=True)
 @click.option('--save_path', default='./data/cropped_imgs')
 @click.option('--extension', '-ext', default='jpg')
-@click.option('--resize', type=(int, int), required=True)
+@click.option('--resize', type=(int), required=True)
 @click.option('--interpolation', '-inter', default='INTER_AREA')
 def cli(annot_path, 
         img_path, 
@@ -22,7 +25,6 @@ def cli(annot_path,
         extension, 
         resize,
         interpolation):  
-
     for idx_i, annot in enumerate(os.listdir(annot_path)):
         filename = re.sub(r'\..+', '', annot)
         with open(os.path.join(annot_path, annot)) as handle:
@@ -64,7 +66,6 @@ def cli(annot_path,
                 # plt.show()
             except:
                 pass
-            
             
             
 if __name__ == '__main__':
