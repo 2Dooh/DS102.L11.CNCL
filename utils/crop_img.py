@@ -8,7 +8,7 @@ import click
 import re
 import numpy as np
 import matplotlib.pyplot as plt
-
+from utils.convert_coord import convert_coords, reconvert_coords
 
 
 
@@ -31,6 +31,8 @@ def cli(annot_path,
             ordered_dict = xmltodict.parse(handle.read())
         annotation = json.loads(json.dumps(ordered_dict)) 
         objects = annotation['annotation']['object']
+        # remove label bicycle
+        objects = [i for i in objects if not (i['name'] == 'bicycle')]
         for idx_j, obj in enumerate(objects):
             label, coords = obj['name'], obj['bndbox']
             coord = np.array(list(coords.values()), dtype=np.float).reshape((2, 2)).T
@@ -47,6 +49,7 @@ def cli(annot_path,
             
             coord_data = [xmin, xmax, ymin, ymax]
             converted_coord = convert_coords(coord_data, resized_img.shape[0])
+            
 
             target_dict = {
                 "bus": 0,
@@ -58,14 +61,6 @@ def cli(annot_path,
                 "van": 6
             }
             converted_coord.insert(0,target_dict[label])
-            # print(str(converted_coord).replace(',', ''))
-            # print(reconvert_coords(converted_coord, target_dict))
-            # save to txt file
-
-            # yolo_target = [label] + convert_coords(coord, img.shape[0])
-            # print(reconvert_coords(yolo_target))
-
-            # save coord_data
             
 
             # cropped_obj = img[ymin:ymax, xmin:xmax]
@@ -85,35 +80,7 @@ def cli(annot_path,
             file_txt = open("./data/yolo_txt/file"+str(idx_i)+".txt","a+")
             file_txt.write(str(converted_coord).replace(',', '')[1:-1] + '\n')
             file_txt.close()
-def convert_coords(coord, length):
-    # 0 : xmin, 1: xmax, 2:ymin, 3:ymax
-    # [501, 511, 481, 503],  -> lay 4 so chia 608
-    # 0.82, 0.84, 0.83, 0.87
-    # converted_coords = 
-    # 0 (xmin + xmax)/2: x trung diem
-    #   (ymin + ymax)/2: y trung diem 
-    #   x_trungdiem - xmin: chenh lech x
-    #   y_trungdiem - ymin: chenh lech y
 
-    coord = np.array(coord)
-    coord = coord/length
-    xmin, xmax, ymin, ymax = coord
-    x_midpoint = (xmin + xmax)/2
-    y_midpoint = (ymin + ymax)/2
-    x_midrange = x_midpoint - xmin
-    y_midrange = y_midpoint - ymin
-    converted_coord = [x_midpoint, y_midpoint, x_midrange, y_midrange]
-    return converted_coord
-
-def reconvert_coords(coord, dict):
-    label_number, x_midpoint, y_midpoint, x_midrange, y_midrange = coord
-    label_name = (list(dict.keys())[list(dict.values()).index(label_number)])
-    xmin = round((x_midpoint - x_midrange)*608)
-    xmax = round((x_midpoint + x_midrange)*608)
-    ymin = round((y_midpoint - y_midrange)*608)
-    ymax = round((y_midpoint + y_midrange)*608)
-    reconverted_coord = [xmin, xmax, ymin, ymax]
-    return reconverted_coord, label_name
 
 
     # f.close()        
