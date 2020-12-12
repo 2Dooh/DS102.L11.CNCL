@@ -1,5 +1,5 @@
 from numpy.core.fromnumeric import shape
-from .resize_img import square_padding_img
+from resize_img import square_padding_img
 import cv2 as cv
 import json
 import xmltodict
@@ -8,7 +8,7 @@ import click
 import re
 import numpy as np
 import matplotlib.pyplot as plt
-from utils.convert_coord import convert_coords, reconvert_coords
+from convert_coord import convert_coords, reconvert_coords
 
 
 
@@ -17,7 +17,7 @@ from utils.convert_coord import convert_coords, reconvert_coords
 @click.option('--img_path', required=True)
 @click.option('--save_path', default='./data/cropped_imgs')
 @click.option('--extension', '-ext', default='jpg')
-@click.option('--resize', type=(int), required=True)
+@click.option('--resize', type=(int, int), required=True)
 @click.option('--interpolation', '-inter', default='INTER_AREA')
 def cli(annot_path, 
         img_path, 
@@ -25,7 +25,7 @@ def cli(annot_path,
         extension, 
         resize,
         interpolation):  
-    for idx_i, annot in enumerate(os.listdir(annot_path)):
+    for idx_i, annot in enumerate([f for f in os.listdir(annot_path) if f.endswith('.xml')]):
         filename = re.sub(r'\..+', '', annot)
         with open(os.path.join(annot_path, annot)) as handle:
             ordered_dict = xmltodict.parse(handle.read())
@@ -34,11 +34,12 @@ def cli(annot_path,
         # remove label bicycle
         objects = [i for i in objects if not (i['name'] == 'bicycle')]
         for idx_j, obj in enumerate(objects):
-            label, coords = obj['name'], obj['bndbox']
-            coord = np.array(list(coords.values()), dtype=np.float).reshape((2, 2)).T
+            try:
+                label, coords = obj['name'], obj['bndbox']
+                coord = np.array(list(coords.values()), dtype=np.float).reshape((2, 2)).T
 
-            img = cv.imread(os.path.join(img_path, filename + '.{}'.format(extension)))
-            img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
+                img = cv.imread(os.path.join(img_path, filename + '.{}'.format(extension)))
+                img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
             # scale = max(resize) / max(img.shape[:-1])
 
             # padded_img, bias = square_padding_img(img)
@@ -46,7 +47,7 @@ def cli(annot_path,
 
             # coord *= scale
             # coord[np.argmax(img.shape[:-1])] += scale * bias
-            try:
+            
                 xmin, xmax, ymin, ymax = coord.ravel().astype(np.int)
                 w, h = xmax-xmin, ymax-ymin
                 center_x, center_y = xmin + w//2, ymin + h//2

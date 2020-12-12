@@ -4,21 +4,22 @@ import numpy as np
 import pickle5 as pickle
 
 def main():
-    names = ['bus', 'car', 'motor', 'background', 'pedestrian', 'truck', 'van']
+    names = ['bus', 'car', 'motor', 'background', 'pedestrian', 'trycicle', 'truck', 'van']
     colors = [(88, 235, 52), 
             (88, 235, 52), 
             (235, 235, 52), 
             (229, 52, 235), 
             (36, 209, 198), 
             (209, 36, 62), 
-            (172, 209, 36)]
+            (172, 209, 36),
+            (235, 235, 52),]
     img_path = './data/video20-305/001.jpg'
     img = cv.imread(img_path)
     img = cv.cvtColor(img, cv.COLOR_BGR2RGB)
     # plt.imshow(img)
     # plt.show()
     # img = cv.resize(img, (1280, 720))
-    with open('./pred/pred_1_fhd.pickle', 'rb') as handle:
+    with open('./pretrained_weights/pred/pred_1_fhd.pickle', 'rb') as handle:
         res = pickle.load(handle)
     boxes, labels, scores = res.values()
     stride = 4
@@ -42,4 +43,4 @@ def main():
     # print(res.shape)
     #print(np.unique(res, return_counts=True))
 
-# main()
+main()
