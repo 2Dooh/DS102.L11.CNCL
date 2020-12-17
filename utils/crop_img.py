@@ -1,5 +1,5 @@
 from numpy.core.fromnumeric import shape
-from resize_img import square_padding_img
+from .resize_img import square_padding_img
 import cv2 as cv
 import json
 import xmltodict
@@ -8,7 +8,7 @@ import click
 import re
 import numpy as np
 import matplotlib.pyplot as plt
-from convert_coord import convert_coords, reconvert_coords
+from .convert_coord import convert_coords, reconvert_coords
 
 
 
@@ -76,4 +76,5 @@ if __name__ == '__main__':
     #     './data/CroppedImages608x608', '--resize', 608, 608])
     # cli(['--annot_path', './data/labeled_images/', '--img_path', './data/video20-305/', '--save_path',
     #     './data/rgb_32x32', '--resize', 32, 32])
-    cli()
+    pass
+    # cli()

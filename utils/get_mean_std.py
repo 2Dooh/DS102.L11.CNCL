@@ -89,4 +89,5 @@ def cli(dataset, batch_size, folder):
         print('std: %s' % std.view(-1))
 
 if __name__ == '__main__':
-    cli()
+    pass
+    # cli()

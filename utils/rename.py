@@ -21,4 +21,5 @@ def cli(extension, path):
         os.replace(filename, replaced_name)
 
 if __name__ == "__main__":
-    cli()
+    pass
+    # cli()

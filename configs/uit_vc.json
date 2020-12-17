@@ -1,0 +1,58 @@
+{
+    "agent": "DeepLearningAgent",
+    "mode": "valid",
+    "cuda": true,
+    "seed": 0,
+    "max_epochs": 5,
+    "verbose": true,
+    "report_freq": 78,
+    "validate_every": 1,
+    
+    "data_loader": "CroppedImages",
+    "data_loader_args": {
+        "train_folder": "./data/UIT-VC-constant-padded/Train",
+        "test_folder": "./data/UIT-VC-constant-padded/Test",
+        "pin_memory": true,
+        "padd_mode": "constant",
+        "class_labels": ["bicycle", "bus", "car", "motor", "pedestrian", "tricycle", "truck", "van"],
+        "num_workers": 4,
+        "batch_size": 96,
+        "input_size": [3, 32, 32],
+        "cutout": true,
+        "cutout_length": 16
+    },
+
+    "criterion": "CrossEntropyLoss",
+    "criterion_args": {},
+
+    "grad_clip": 5,
+
+    "optimizer": "SGD",
+    "optimizer_args": {
+        "lr": 0.025,
+        "momentum": 0.9,
+        "weight_decay": 7e-4
+    },
+    "scheduler": "CosineAnnealingLR",
+    "scheduler_args": {"T_max": 5, "eta_min": 0},
+
+    "deterministic": false,
+
+    "model": "CNN",
+    "model_args": {
+        "input_size": [3, 32, 32],
+        "output_size": 8,
+        "n_bits": {"kernel_sizes": 2, "pool_sizes": 1, "channels": 2},
+        "target_val": {
+            "kernel_sizes": [3, 5, 7, 9],
+            "pool_sizes": [1, 2],
+            "channels": [16, 32, 64, 128]},
+
+        "n_nodes": [6, 6, 6],
+        "genome": "1 0 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 0 1 1 0 0 1 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1 1 0 0 0 1 1 0 1 0 0 0 1 1 1 1 0 1 1 1 1 1 1 1 1 0 0 0 0 0 1"
+    },
+
+    "summary_writer": false,
+    "save_path": "./pretrained_weights/UIT_VC/demo",
+    "checkpoint_file": "./pretrained_weights/UIT_VC/multi_metrics/CNN-Ep_303-Err_14.591.pth.tar"
+}

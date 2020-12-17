@@ -3,6 +3,7 @@ from torch.utils.data import DataLoader, Subset
 import torchvision.datasets as datasets
 from utils.cutout import Cutout
 from utils.split import split
+from utils.resize_img import SquarePadding
 import numpy as np
 
 
@@ -12,35 +13,37 @@ class CroppedImages:
     MEAN = [.5] * 3
     STD = [.5] * 3
     def __init__(self, 
-                 folder,
+                 train_folder,
+                 test_folder,
                  num_workers, 
                  batch_size, 
                  pin_memory,
                  input_size,
+                 class_labels,
+                 padd_mode='constant',
                  cutout=False,
                  cutout_length=None,
                  **kwargs):
         
-        train_transform = transforms.Compose([
+        train_transform = transforms.Compose([transforms.Resize(input_size[1:]),
                                               transforms.RandomCrop(input_size[1:], padding=4),
                                               transforms.RandomHorizontalFlip(),
                                               transforms.ToTensor(),
                                               transforms.Normalize(self.MEAN, self.STD)])
         if cutout:
             train_transform.transforms.append(Cutout(cutout_length))
-        valid_transform = transforms.Compose([transforms.ToTensor(), 
+        valid_transform = transforms.Compose([transforms.Resize(input_size[1:]),
+                                              transforms.ToTensor(), 
                                               transforms.Normalize(self.MEAN, self.STD)])
 
-        train_indices, test_indices = split(folder)
+        # train_indices, test_indices = split(folder)
 
-        dataset_train = datasets.ImageFolder(root=folder, transform=train_transform)
+        train_data = datasets.ImageFolder(root=train_folder, transform=train_transform)
+        test_data = datasets.ImageFolder(root=test_folder, transform=valid_transform)
         
-        
-        dataset_test = datasets.ImageFolder(root=folder, transform=valid_transform)
-        
-        train_data = Subset(dataset_train, train_indices)
-
-        test_data = Subset(dataset_test, test_indices)
+        # train_data = Subset(test_data, train_indices)
+        # test_data = Subset(test_data, test_indices)
+        self.class_labels = class_labels
 
         self.train_loader = DataLoader(dataset=train_data,
                                        batch_size=batch_size,

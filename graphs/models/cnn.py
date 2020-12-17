@@ -22,19 +22,32 @@ class CNN(Module):
 
         genome_dict, list_indices = self.setup_model_args(n_nodes, genome, n_bits, target_val, input_size)
 
-        self.model = VariableGenomeDecoder(**genome_dict, repeats=repeats).get_model()
+        model = VariableGenomeDecoder(**genome_dict, repeats=repeats).get_model()
         self.genome_model = list_indices
 
         out = None
         with torch.no_grad():
-            out = self.model.to('cuda:0')(torch.empty(1, *(input_size), device='cuda:0'))
+            out = model.to('cuda:0')(torch.empty(1, *(input_size), device='cuda:0'))
         shape = out.data.shape
+        # print(shape)
 
         self.gap = nn.AvgPool2d(kernel_size=(shape[-2], shape[-1]), stride=1)
 
         shape = self.gap(out).data.shape
 
         self.conv1x1 = nn.Conv2d(in_channels=shape[1], out_channels=output_size, kernel_size=1)
+
+        self._model = nn.Sequential(model, self.gap, self.conv1x1)
+
+    def forward(self, x):
+      # # print('Input')
+      # # print(x.size())
+      # # print(self.model(x).size())
+      # x = self.gap(self.model(x))
+      # # print(x.size())
+      # # x = x.view(x.size(0), -1)
+      # return self.conv1x1(x)
+      return self._model(x)
 
     @staticmethod
     def setup_model_args(n_nodes, 
@@ -128,7 +141,4 @@ class CNN(Module):
         genome_dict['list_genome'] = list_connections
         return genome_dict, list_indices
 
-    def forward(self, x):
-        x = self.gap(self.model(x))
-        # x = x.view(x.size(0), -1)
-        return self.conv1x1(x)
+    
